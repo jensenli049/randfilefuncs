@@ -8,5 +8,5 @@ run: all
 	./randfunc
 
 clean:
-	rm *~
+	#rm randArr
 	rm *.o

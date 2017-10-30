@@ -1,10 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/stat.h>
-#include <string.h>
 #include "randfilefunc.h"
 
 int main(){
@@ -15,22 +8,19 @@ int main(){
   printf("generating random numbers...\n");
   while(i++ < 10){
     arr[i] = numGen();
-      //printf("nGen: %d\n",numGen());
+    //printf("nGen: %d\n",numGen());
     printf("\tRandom %d: %d\n", i, arr[i]);
   }
 
+  printf("\nWriting %d bytes to file.\n",writeToFile("randArr"));
 
-  //opens and writes arr into file
-    printf("Writing %d bytes to file.\n",writeToFile("randArr"));
-
-  //reads file into new arr
-    readFromFile("randArr");
+  readFromFile("randArr");
     
-    //prints arr2:
-    int n = 0;
-    while (n++ < 10){
-        printf("\tRandom %d: %d\n", n, arr2[n]);
-    }
+  //prints arr2:
+  int n = 0;
+  while (n++ < 10){
+    printf("\tRandom %d: %d\n", n, arr2[n]);
+  }
 }
 
 int numGen(){
@@ -40,14 +30,16 @@ int numGen(){
   read(temp, &ans, sizeof(ans));
   close(temp);
     
-    return ans;
+  return ans;
 }
  
 int writeToFile(char filename[]){
   int fd = open(filename, O_CREAT | O_EXCL | O_RDWR, 0644); //returns error if tempfile exists
   if(fd == -1){
-    printf("Error: %s\n", strerror(errno));
-    return -1;
+    close(fd);
+    fd = open(filename, O_WRONLY, 0644);
+    if(fd == -1)
+      printf("ERROR: %s", strerror(errno));
   }
   int bytes = write(fd,arr, 11 * sizeof(int));
   printf("\nWriting numbers to files...\n");
@@ -55,9 +47,10 @@ int writeToFile(char filename[]){
   return bytes;
 }
 
-int readFromFile(char filename[]){//}, int array[]){
-  int fd = open(filename, O_RDONLY); 
+int readFromFile(char filename[]){
+  int fd = open(filename, O_RDONLY);
+  printf("\nReading numbers from files...\n");
   read(fd, arr2, 11 * sizeof(int));
-    close(fd);
+  close(fd);
   return fd;
 }
