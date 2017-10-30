@@ -1,3 +1,10 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <string.h>
 #include "randfilefunc.h"
 
 int main(){
@@ -8,8 +15,9 @@ int main(){
   printf("generating random numbers...");
   while(i++ < 10){
     arr[i] = numGen();
-    printf("\tRandom %d: %d\n", i, a[i]);
+    printf("\tRandom %d: %d\n", i, arr[i]);
   }
+
 
   //opens and writes arr into file
 
@@ -24,10 +32,10 @@ int numGen(){
   int temp = open("/dev/random/", O_RDONLY);
   read(temp, &ans, sizeof(ans));
   close(temp);
-  return ans
+    return ans;
 }
  
-int writeToFile(char[] filename){
+int writeToFile(char filename[]){
   int fd = open(filename, O_CREAT | O_EXCL | O_RDWR, 0644); //returns error if tempfile exists
   if(fd == -1){
     printf("Error: %s\n", strerror(errno));
@@ -39,9 +47,9 @@ int writeToFile(char[] filename){
   return bytes;
 }
 
-int readFromFile(char[] filename, int descriptor, int[] array){
+int readFromFile(char filename[], int descriptor, int array[]){
   int fd = open(filename, O_RDONLY); 
   read(fd, array, sizeof(array));
-  close(fd)
+    close(fd);
   return fd;
 }
