@@ -3,4 +3,4 @@ int arr2[10];
 
 int numGen();
 int writeToFile(char[]);
-int readFromFile(char[], int, int[]);
+int readFromFile(char[]);
